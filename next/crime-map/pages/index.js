@@ -2,12 +2,10 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { toast, ToastContainer } from 'react-nextjs-toast'
 import { postcodeValidator } from 'postcode-validator';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
-import {CrimeMap} from '../components/crime-map'
-import CrimeMarkers from '../components/crime-map/CrimeMarkers'
+import CrimeMap from  '../components/crime-map/CrimeMap'
 
-import Marker from '../components/simple-marker/marker'
 
 
 
@@ -21,17 +19,13 @@ const fetcher = (url) => fetch(url).then((res) => res.json())
 
 
 
-
-
 export default function Home() {
   const [postcode, postcodeInput] = useInput({ type: "text" });
-  const [map, setMap] = useState()
-  const [maps, setMaps] = useState()
-
+  const [center, setCenter] = useState({lat: 52.3555, lng:1.1743})
+  const [zoom, setZoom] = useState(7)
   const [crimeData, setCrimeData] = useState([])
 
   const handleClick = async () => {
-
     if (!postcodeValidator(postcode, 'GB')) {
       toast.notify(`postcode not valid`, {
         type: "warn",
@@ -45,14 +39,9 @@ export default function Home() {
     console.log(location)
     console.log('CRIME', crime)
     setCrimeData(crime)
-
-    map.panTo(location)
+    setCenter(location)
+    setZoom(14)
   }
-
-  const handleApiLoaded = (map, maps) => {
-    setMap(map)
-    setMaps(maps)
-  };
 
   return (
     <div className={styles.container}>
@@ -61,43 +50,43 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Marker
-        lat={59.95}
-        lng={30.33}
-        name="My Marker"
-        color="blue"
-      />
-
-
-      <main className={styles.main}>
-
         <ToastContainer
         // align='center'
         // position='top'
         />
 
-        <h1 className={styles.title}>
+      <main className={styles.main}>
+
+
+        {/* <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Crime Mapper!</a>
         </h1>
 
-        {postcodeInput}
+        
         <button
           onClick={handleClick}
         >
-          Submit</button>
-
-          <CrimeMap 
-            markers={CrimeMarkers(crimeData)}
-            handleApiLoaded={handleApiLoaded}
-          />
+          Submit</button> */}
 
 
+          <div>
+          {postcodeInput}
+            <button
+            onClick={handleClick}
+          >
+            Submit</button>
+            <CrimeMap 
+              crimeData={crimeData}
+              center={center}
+              zoom={zoom}
+            />
+          </div>
 
 
-        <p className={styles.description}>
+        {/* <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
-        </p>
+        </p> */}
 
         {/* <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>

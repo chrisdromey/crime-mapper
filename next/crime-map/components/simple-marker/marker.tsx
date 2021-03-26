@@ -6,8 +6,10 @@ type Props = {
   name: string
   id: string
   text: string
-  lng: number
-  lat: number
+  position: {
+    lng: number
+    lat: number
+  }
 }
 
 const Marker = ({ color, name, id, text }: Props) => {

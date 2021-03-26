@@ -14,17 +14,32 @@ export type OptionsRange = {
   endDate: string;
 }
 
+export type CrimeSpot = {
+  location: CrimeDataLocation;
+  crimes: CrimeSummery[]
+}
+
+export type CrimeSummery = {
+  id: number;
+  category: string;
+  outcome: string
+  month: string;
+  location: Location
+}
+
+export type CrimeDataLocation = { 
+  latitude: number;
+  street: {
+    id: number;
+    name: string;
+  };
+  longitude: number;
+}
+
 export type CrimeDataPoint = {
   category: string;
   location_type: string;
-  location: {
-    latitude: number;
-    street: {
-      id: number;
-      name: string;
-    };
-    longitude: number;
-  };
+  location: CrimeDataLocation;
   context: string;
   outcome_status: {
     category: string;

@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { Location } from '../types/types'
+import get from './fileCache'
 
 const BASE_URL = 'http://api.getthedata.com/postcode'
 
@@ -33,7 +34,7 @@ type PostCodeLocationData = {
 }
 
 async function callAPI(path: string, params:string ) : Promise<APIResponse>{
-  return (await axios.get(`${BASE_URL}/${path}?${params}`)).data
+  return await (await (get(`${BASE_URL}/${path}?${params}`)))
 }
 
 export async function getLocationForPostcode(postcode: string): Promise<Location> {

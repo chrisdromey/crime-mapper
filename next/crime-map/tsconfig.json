@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "public/map.js"  ],
+, "public/map.js", "components/crime-map/CrimeMarkers.jsx"  ],
   "exclude": [
     "node_modules"
   ]

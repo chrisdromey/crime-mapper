@@ -1,20 +1,19 @@
 import axios from 'axios'
 import { OptionsMonth, CrimeDataPoint, OptionsRange } from '../types/types'
+import get from './fileCache'
 
 const BASE_URL = 'https://data.police.uk/api/'
 
 async function callAPI(path:string, params:string) {
-  return await axios.get(`${BASE_URL}/${path}?${params}`)
+  return await get(`${BASE_URL}/${path}?${params}`)
 }
 
 export async function getCrimeMonth({ location, date }: OptionsMonth): Promise<CrimeDataPoint[]> {
   const dateParam = date ? `&date=${date}` : ''
   const apiPath = 'crimes-street/all-crime'
   const paramsStr = `lat=${location.lat}&lng=${location.lng}${dateParam}`
-  console.log('calling api')
   const response = await callAPI(apiPath, paramsStr)
-  console.log('DONE calling api')
-  const data = response.data as CrimeDataPoint[]
+  const data = response as CrimeDataPoint[]
 
   return data
 }
