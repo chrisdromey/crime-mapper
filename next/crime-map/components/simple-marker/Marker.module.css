@@ -1,0 +1,35 @@
+.marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  background-color: #000;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  user-select: none;
+  transform: translate(-50%, -50%);
+}
+
+.marker:hover {
+  z-index: 1;
+}
+
+.marker:hover + .label {
+  display: block;
+  /* color: #4287f5;
+  font-size: 20px; */
+}
+
+.label {
+  display: none;
+  position: absolute;
+  user-select: none;
+  width: 130px;
+  font-size: 16px; 
+  background-color: rgb(138, 150, 31);
+}
+
+.label:hover {
+  display: block;
+}
