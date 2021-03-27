@@ -1,29 +1,45 @@
-import { CrimeDataPoint, CrimeSpot } from "../types/types";
+import { CrimeDataLocation, CrimeDataPoint, CrimeSpot, CrimeSummery } from "../types/types";
 
-export default function convert(crimeData: CrimeDataPoint[]): CrimeSpot[] {
-
+export default function convertToCrimeSpots(crimeData: CrimeDataPoint[]): CrimeSpot[] {
   const crimeSpots: CrimeSpot[] = []
-
-  console.log('convert data', crimeData)
-  crimeData.forEach(crime => {
-    let crimeSpot: CrimeSpot = crimeSpots.filter(s=> s.location.longitude === crime.location.longitude && s.location.latitude === crime.location.latitude)[0] 
-    if (!crimeSpot){
-      crimeSpot = {location: crime.location, crimes: []}
-      crimeSpots.push(crimeSpot)
+  
+  crimeData.forEach(crimeDataPoint => {
+    const isSameLocation = getSameLocationFilter(crimeDataPoint)
+    let crimeSpotForLocation: CrimeSpot = crimeSpots.filter(isSameLocation)[0] 
+    
+    if (!crimeSpotForLocation){
+      crimeSpotForLocation = newCrimeSpot(crimeDataPoint.location)
+      crimeSpots.push(crimeSpotForLocation)
     }
-    crimeSpot.crimes.push({
-      id: crime.id,
-      category: crime.category,
-      outcome: crime.outcome_status?.category || 'UNKNOWN',
-      month: crime.month,
-      location: {
-        lat: crime.location.latitude,
-        lng: crime.location.longitude
-      }
-    })
+    crimeSpotForLocation.crimes.push(generateSummery(crimeDataPoint))
   })
 
-  console.log('convert result', crimeSpots)
   return crimeSpots
+}
 
+function newCrimeSpot(location: CrimeDataLocation): CrimeSpot {
+  return {
+    location,
+    crimes: []
+  }
+}
+
+function getSameLocationFilter(crimeDataPoint: CrimeDataPoint) {
+  return (crimeSpot: CrimeSpot) => {
+    return crimeSpot.location.longitude === crimeDataPoint.location.longitude &&
+      crimeSpot.location.latitude === crimeDataPoint.location.latitude
+  }
+}
+
+function generateSummery(crimeDataPoint:CrimeDataPoint): CrimeSummery {
+  return {
+    id: crimeDataPoint.id,
+    category: crimeDataPoint.category,
+    outcome: crimeDataPoint.outcome_status?.category || 'UNKNOWN',
+    month: crimeDataPoint.month,
+    location: {
+      lat: crimeDataPoint.location.latitude,
+      lng: crimeDataPoint.location.longitude
+    }
+  }
 }

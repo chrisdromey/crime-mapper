@@ -1,17 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getCrimeMonthRange } from '../../../lib/crimeAPI';
+import { formatDate, getCrimeMonthRange } from '../../../lib/crimeAPI';
 import { getLocationForPostcode } from '../../../lib/postCodeAPI';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { postcode } = req.query
+  const { postcode, start, end } = req.query
+  
+  console.log('start', start)
 
+  const startDate = start ? formatDate(new Date(Date.parse(start as string))) : formatDate(new Date())
+  const endDate = end ? formatDate(new Date(Date.parse(end as string))) : formatDate(new Date())
+
+  console.log('startDate', startDate)
   if (typeof postcode === 'string') {
     const location = await getLocationForPostcode(postcode)
     console.log('location', location)
     const crime = await getCrimeMonthRange({
       location, 
-      startDate: "2020-11",
-      endDate: "2021-06"
+      startDate,
+      endDate
     })
     return res.send(crime)
   }

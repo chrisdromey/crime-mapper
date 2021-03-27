@@ -4,7 +4,7 @@ import get from './fileCache'
 
 const BASE_URL = 'https://data.police.uk/api/'
 
-async function callAPI(path:string, params:string) {
+async function call(path:string, params:string) {
   return await get(`${BASE_URL}/${path}?${params}`)
 }
 
@@ -12,7 +12,7 @@ export async function getCrimeMonth({ location, date }: OptionsMonth): Promise<C
   const dateParam = date ? `&date=${date}` : ''
   const apiPath = 'crimes-street/all-crime'
   const paramsStr = `lat=${location.lat}&lng=${location.lng}${dateParam}`
-  const response = await callAPI(apiPath, paramsStr)
+  const response = await call(apiPath, paramsStr)
   const data = response as CrimeDataPoint[]
 
   return data
@@ -35,7 +35,7 @@ function generateMonthArray(startDateStr: string, endDateStr: string) {
   return dateArray.map(formatDate)
 }
 
-function formatDate(date: Date) {
+export function formatDate(date: Date) {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   return `${year}-${month}`

@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from "react"
-import { Map, InfoWindow, Marker, GoogleApiWrapper, mapEventHandler, markerEventHandler } from 'google-maps-react';
+import React, { useState } from "react"
+import { Map, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
 import CrimeMarkers from'./CrimeMarkers'
 
-import convert from '../../lib/crimeDataTOCrimeSpots'
 
 const style = {
-  maxWidth: "800x",
-  height: "700px",
-  overflowX: "hidden",
-  overflowY: "hidden"
+  maxWidth: "100%",
+
+  // height: "100%",
+  // overflowX: "hidden",
+  // overflowY: "hidden",
+  left: 0,
+  right: 0
 };
 
 const containerStyle = {
-  maxWidth: "800px",
-  height: "700px",
+  // display:'inline-block',
+  maxWidth: "100%",
+  height: "60%",
   marginLeft: "auto",
   marginRight: "auto",
   left: 0,
@@ -21,25 +24,10 @@ const containerStyle = {
 };
 
 
-const MyOwnMarker = (props) => React.createElement(CrimeMarkers,{
-  ...props
-})
-
 export function MapContainer(props) {
   const [showingInfoWindow, setShowingInfoWindow] = useState(false)
   const [activeMarker, setActiveMarker] = useState(null)
   const [selectedPlace, setSelectedPlace] = useState()
-  const [markers, setMarkers] = useState([])
-
-  useEffect( () => {
-    console.log('Crime Data updated');
-    setMarkers( <CrimeMarkers 
-      crimeData={props.crimeData}
-      onMarkerClick={onMarkerClick}
-      map={props.map}
-      google={google}
-      />)
-}, [props.crimeData])
 
   const onMarkerClick = (props, marker, e) => {
     setSelectedPlace(props)
@@ -61,52 +49,41 @@ export function MapContainer(props) {
       center={props.center}
       initialCenter={props.center}
       zoom={props.zoom}
+      style={style}
+      containerStyle={containerStyle}
+      resetBoundsOnResize = {true}
     >
 
-    {/* <MyOwnMarker 
-      onMarkerClick={onMarkerClick}
-      {...props}
-    /> */}
-
-      {/* <CrimeMarkers 
+      <CrimeMarkers 
         crimeData={props.crimeData}
         onMarkerClick={onMarkerClick}
         map={props.map}
         google={google}
-        /> */}
-
-        { markers }
-      {/* {
-        convert(props.crimeData).map((crimeSpot, index) => {
-          // console.log('gen', index)
-          return (
-            <Marker
-              key={`crime-${index}`}
-              position={{
-                lat: crimeSpot.location.latitude,
-                lng: crimeSpot.location.longitude
-              }}
-              name={crimeSpot.crimes[0].persistent_id}
-              title={crimeSpot.crimes[0].category}
-              time={crimeSpot.crimes[0].month}
-              location={crimeSpot.location.street.name}
-              outcome={crimeSpot.crimes[0].outcome}
-              count={crimeSpot.crimes.length}
-              onClick={onMarkerClick}
-            />
-          )
-        })
-      } */}
+        />
 
       <InfoWindow
         marker={activeMarker}
         visible={showingInfoWindow}>
         <div>
-          <h1>{selectedPlace?.count}</h1>
-          <p>{selectedPlace?.title}</p>
-          <p>{selectedPlace?.time}</p>
-          <p>{selectedPlace?.location}</p>
-          <p>{selectedPlace?.outcome}</p>
+          <h2>{selectedPlace?.crimeSpot.location.street.name}</h2>
+          <h3>{selectedPlace?.crimeSpot.crimes.length} crimes</h3>
+          {
+            [...new Set(selectedPlace?.crimeSpot.crimes.map(c=>c.category))].map(unique=>{
+              const num = selectedPlace?.crimeSpot.crimes.filter(c => c.category == unique).length
+              return (
+                <p>{num} x {unique}</p>
+              )
+              })
+          }
+          --------------
+          {
+            [...new Set(selectedPlace?.crimeSpot.crimes.map(c=>c.outcome))].map(unique=>{
+              const num = selectedPlace?.crimeSpot.crimes.filter(c => c.outcome == unique).length
+              return (
+                <p>{num} x {unique}</p>
+              )
+              })
+          }
         </div>
       </InfoWindow>
     </Map>

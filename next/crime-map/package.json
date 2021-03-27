@@ -14,8 +14,12 @@
     "next": "10.0.9",
     "postcode-validator": "^3.2.0",
     "react": "17.0.2",
+    "react-datepicker": "^3.6.0",
     "react-dom": "17.0.2",
-    "react-nextjs-toast": "^1.2.5"
+    "react-nextjs-toast": "^1.2.5",
+    "react-popup": "^0.10.0",
+    "react-toastify": "^7.0.3",
+    "reactjs-popup": "^2.0.4"
   },
   "devDependencies": {
     "@types/google-map-react": "^2.1.0",

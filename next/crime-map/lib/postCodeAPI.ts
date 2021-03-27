@@ -33,7 +33,7 @@ type PostCodeLocationData = {
   incode: string
 }
 
-async function callAPI(path: string, params:string ) : Promise<APIResponse>{
+async function call(path: string, params:string ) : Promise<APIResponse>{
   return await (await (get(`${BASE_URL}/${path}?${params}`)))
 }
 
@@ -42,7 +42,7 @@ export async function getLocationForPostcode(postcode: string): Promise<Location
   const apiPath = postcode
   const paramsStr = ``
 
-  const response = await callAPI(apiPath, paramsStr)
+  const response = await call(apiPath, paramsStr)
   const data = response.data
 
 
